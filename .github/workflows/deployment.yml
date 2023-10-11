@@ -1,0 +1,17 @@
+name: Test React CI/CD
+on: [push]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'\
+      
+      - name: Install dependencies
+        run: yarn
+      
+      - name: Test
+        run: yarn test
