@@ -32,7 +32,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build Docker image
-        run: docker build 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:latest .
+        run: docker build -t 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:latest .
 
       - name: Push image
         run: docker push 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:latest
