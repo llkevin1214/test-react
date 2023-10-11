@@ -7,7 +7,7 @@ jobs:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v4
-        
+
       - name: Install Node
         uses: actions/setup-node@v3
         with:
@@ -19,3 +19,20 @@ jobs:
       
       - name: Test
         run: yarn test
+      
+      - name: Configure AWS credentials
+        id: config-aws-credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET }}
+          aws-region: ap-east-1
+
+      - name: Login ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build Docker image
+        run: docker build 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:latest .
+
+      - name: Push image
+        run: docker push 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:latest
