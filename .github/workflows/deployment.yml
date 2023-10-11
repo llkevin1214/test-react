@@ -32,14 +32,14 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build Docker image
-        run: docker build -t 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:$IMAGE_TAG .
+        run: docker build -t 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:${{ github.sha }} .
 
       - name: Push image
         id: build-image
         run: |
-          docker push 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:$IMAGE_TAG
-          echo "image=669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:$IMAGE_TAG" >> $GITHUB_OUTPUT
-          docker tag 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:$IMAGE_TAG 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:latest
+          docker push 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:${{ github.sha }}
+          echo "image=669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:${{ github.sha }}" >> $GITHUB_OUTPUT
+          docker tag 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:${{ github.sha }} 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
       - name: Fill in the new image ID in the Amazon ECS task definition
