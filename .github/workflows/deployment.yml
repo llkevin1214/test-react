@@ -40,7 +40,7 @@ jobs:
           docker push 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:${{ github.sha }}
           echo "image=669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:${{ github.sha }}" >> $GITHUB_OUTPUT
           docker tag 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:${{ github.sha }} 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:latest
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker push 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:latest
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
