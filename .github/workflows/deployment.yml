@@ -32,7 +32,28 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build Docker image
-        run: docker build -t 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:latest .
+        run: docker build -t 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:$IMAGE_TAG .
 
       - name: Push image
-        run: docker push 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:latest
+        id: build-image
+        run: |
+          docker push 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:$IMAGE_TAG
+          echo "image=669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          docker tag 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:$IMAGE_TAG 669336776822.dkr.ecr.ap-east-1.amazonaws.com/test-react:latest
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: react-react
+          image: ${{ steps.build-image.outputs.image }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: test-react
+          cluster: test-react
+          wait-for-service-stability: true
